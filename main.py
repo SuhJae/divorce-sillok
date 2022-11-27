@@ -5,14 +5,17 @@ import time
 with open('result.txt') as f:
     # print each line
     for line in f:
-        url = line.split('^')[4].replace('http://', 'https://')
-        if url.startswith('http'):
+        url = line.split('^')[4].replace('http://', 'https://').replace('\n', '')
+        if url.startswith('https://'):
             print(url)
             response = requests.get(url)
+
             soup = bs(response.text, 'html.parser')
-            paragraph = soup.find_all('p', {'class': 'paragraph'})
+            paragraph = soup.find('div', {'class': 'ins_view_pd'})
+            paragraph = paragraph.find_all('p', {'class': 'paragraph'})
 
-            print(paragraph)
-            # print(paragraph.text.replace('              ', ' '))
-            time.sleep(1)
+            for p in paragraph:
+                print(p.text)
 
+            time.sleep(5)
+            print('')
